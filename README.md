@@ -2,6 +2,8 @@
 
 ## 公開ページ（GitHub Pages）
 
+- [曲げと中立軸のアニメーション](https://be-fuji.github.io/bridge-atlas/bending.html)
+
 - [橋の構造図鑑を開く](https://be-fuji.github.io/bridge-atlas/)
 - [橋の分類と用語の地図を開く](https://be-fuji.github.io/bridge-atlas/bridge-theory.html)
 
