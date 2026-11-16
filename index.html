@@ -380,7 +380,7 @@ const toolbar=document.querySelector('.bar');toolbar.prepend($('ibeam'));$('tool
 renderer.setPixelRatio(Math.min(devicePixelRatio,2));build(0);
 const requestedBridge=Number(new URLSearchParams(location.search).get('bridge'));if(Number.isInteger(requestedBridge)&&requestedBridge>=0&&requestedBridge<8)build(requestedBridge);
 new ResizeObserver(draw).observe($('stage'));
-</script></html>
+</script><script src="learning.js"></script></html>
 
 <!-- Three.js license
 The MIT License
