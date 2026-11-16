@@ -86,6 +86,18 @@ const $=id=>document.getElementById(id), types=['鋼鈑桁橋','鋼箱桁橋','�
 const desc={床版:'車輪の荷重を受け、桁などへ分配する板状の部分。',主桁:'橋の長さ方向に延び、荷重を支点まで運ぶ主要な桁。',横桁:'橋の幅方向に架かる桁。主桁などをつなぎ、荷重を分配します。',支承:'桁などと下部工の間で反力を伝え、形式に応じて回転や移動を許します。',下部工:'下部工（かぶこう）は橋台・橋脚と、それらを支える基礎を含む呼び方。橋台・橋脚は下部工の構成要素です。この模型では地中の基礎は省略しています。',横構:'主桁間の水平面に組む斜めの部材。横方向の力を伝えます。',対傾構:'主桁間の鉛直な横断面に組む骨組み。桁の横倒れを抑えます。',縦桁:'橋の長さ方向に延び、床版の荷重を横桁に伝える桁。',上弦材:'トラスの上縁をつなぐ部材。',下弦材:'トラスの下縁をつなぐ部材。',斜材:'トラスの節点を斜めにつなぎ、三角形をつくります。',垂直材:'トラスの上下の節点を縦につなぎます。',橋門構:'トラスの入口で左右の主構を上部でつなぐ骨組み。',アーチリブ:'荷重を主に圧縮力で支え、両端へ伝える曲線状の主部材。',支柱:'床組とアーチリブの間で荷重を伝える柱。',補剛桁:'橋面に沿って架かり、荷重を分配して変形を抑える桁。'};
 let renderer;try{renderer=new THREE.WebGLRenderer({canvas:$('cv'),antialias:true,alpha:true})}catch(e){$('stage').textContent='3D表示にはWebGL対応ブラウザーが必要です。EdgeまたはChromeで開いてください。';throw e}
 const scene=new THREE.Scene(),camera=new THREE.OrthographicCamera(),group=new THREE.Group(),V=(...p)=>new THREE.Vector3(...p);scene.add(group,new THREE.HemisphereLight(0xffffff,0x929e9a,1.12));const sun=new THREE.DirectionalLight(0xfff8e4,.8);sun.position.set(4,11,7);scene.add(sun);
+// The model uses Y as up, so its horizontal ground grid lies in the XZ plane.
+const groundGrid=new THREE.GridHelper(40,40,0x7c9388,0xa4b6ab);
+groundGrid.material.transparent=true;groundGrid.material.opacity=.32;groundGrid.material.depthWrite=false;
+scene.add(groundGrid);
+function placeGroundGrid(){
+ let floor=Infinity;
+ for(const mesh of group.children){
+  if(!['下部工','橋台','橋脚'].includes(mesh.userData.name))continue;
+  const bounds=new THREE.Box3().setFromObject(mesh);floor=Math.min(floor,bounds.min.y);
+ }
+ groundGrid.position.y=Number.isFinite(floor)?floor-.02:-2.5;
+}
 let mode=0,selected='',question='',transparent=false,yaw=.66,pitch=.28,zoom=1,parts=[];
 function add(name,size,pos,color){let g=new THREE.BoxGeometry(...size),m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color,roughness:.85}));m.position.set(...pos);m.userData={name,color};group.add(m);if(!parts.includes(name))parts.push(name);return m}
 const steel=0x4c8790,stone=0xb2b7a9,deck=0xd4d7c6;
@@ -147,7 +159,7 @@ if(tr){for(let x of [-4.433,4.433]){beam('橋門構',[x,2.45,-2.15],[x,2.45,2.15
 for(let x of [-5,0,5])add('横桁',[.18,slab?.45:.34,slab?4.96:4.35],[x,tr?-.26:arch?.65:slab?.55:.36,0],pc?0x969f93:0x5a7682);
 if(k===1||tr)for(let z of [-.55,.55])add('縦桁',[14,.38,.14],[0,tr?-.13:.71,z],0x719499)
 if(k===0){for(let i=0;i<2;i++){let z=zs[i],n=zs[i+1];for(let x of [-5,0,5]){beam('対傾構',[x,-.34,z],[x,.79,n],.09,.1);beam('対傾構',[x,.79,z],[x,-.34,n],.09,.1)}for(let x of [-5,0]){beam('横構',[x,-.29,z],[x+5,-.29,n],.1,.1);beam('横構',[x,-.29,n],[x+5,-.29,z],.1,.1)}}}
-}$('original').hidden=k!==7;$('side').setAttribute('aria-pressed',k===7);addConnections(k);if(k===7)parts.push('下部工');if(k===0)parts.push(...Object.keys(extra));$('title').innerHTML=rubyName(types[k]);$('guide').textContent=guides[k];$('src').href='https://www.mlit.go.jp/road/sisaku/yobohozen/tenken/yobo3_1_7.pdf#page='+(k<3?6:k<6?7:8);$('sourceLink').href=$('src').href;$('parts').replaceChildren();parts.forEach(n=>button($('parts'),n,()=>choose(n)));[...$('tabs').children].forEach((b,i)=>b.setAttribute('aria-pressed',k===i));$('msg').textContent='';$('ghost').disabled=slab;home();paint()}
+}$('original').hidden=k!==7;$('side').setAttribute('aria-pressed',k===7);addConnections(k);if(k===7)parts.push('下部工');if(k===0)parts.push(...Object.keys(extra));$('title').innerHTML=rubyName(types[k]);$('guide').textContent=guides[k];$('src').href='https://www.mlit.go.jp/road/sisaku/yobohozen/tenken/yobo3_1_7.pdf#page='+(k<3?6:k<6?7:8);$('sourceLink').href=$('src').href;$('parts').replaceChildren();parts.forEach(n=>button($('parts'),n,()=>choose(n)));[...$('tabs').children].forEach((b,i)=>b.setAttribute('aria-pressed',k===i));$('msg').textContent='';$('ghost').disabled=slab;placeGroundGrid();home();paint()}
 function button(parent,n,fn){const b=document.createElement('button');b.dataset.term=n;b.textContent=n;b.onclick=fn;parent.append(b)}
 function paint(){const mark=question||selected;for(const m of group.children){let hit=m.userData.name===mark||(mark==='下部工'&&['橋台','橋脚'].includes(m.userData.name))||Boolean(mark&&subname(m)===mark),fade=!hit&&(mark||transparent&&m.userData.name==='床版');m.material.color.set(hit?0xd87633:m.userData.color);m.material.transparent=!!fade;m.material.opacity=fade?(m.userData.name==='床版'?.11:.23):1;m.material.depthWrite=!fade}for(const b of $('parts').children)b.setAttribute('aria-pressed',!question&&b.dataset.term===selected);$('term').textContent=question?'この部材の名称は？':selected||'模型の見方';$('info').textContent=question?'橙色の部材に合う名称を上から選んでください。':desc[selected]||'名称チップはドラッグで移動できます。強調した部材をもう一度押すと元に戻ります。';$('ghost').setAttribute('aria-pressed',transparent);$('quiz').textContent=question?'問題を終了':'名称当てに挑戦';draw()}
 function choose(n){if(question&&n!==question){$('msg').textContent='もう一度。橙色の部材の位置と向きに注目。';return} $('msg').textContent=question?'正解です。':'';selected=!question&&selected===n?'':n;question='';paint()}
