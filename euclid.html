@@ -1,0 +1,22 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{font-family:system-ui,sans-serif;color:#193936;background:#f4f7f4}body{max-width:880px;margin:auto;padding:24px 16px;line-height:1.8}a{color:#126357}section{background:white;border:1px solid #cadbd1;border-radius:14px;padding:clamp(14px,3vw,28px);margin:20px 0}h1,h2{line-height:1.4}table{border-collapse:collapse}td,th{border-bottom:1px solid #cadbd1;padding:5px 12px;text-align:left}math{font-size:1.15em}summary{cursor:pointer;font-weight:bold}
+</style><title>ユークリッド幾何学・空間・互除法｜橋の構造図鑑</title></head><body><nav><a href="bridge-theory.html">分類・用語の地図</a></nav><main><h1>ユークリッド幾何学・空間・互除法</h1>
+<p>三つの用語には、古代ギリシャの数学者ユークリッド（エウクレイデス）の名前が付いています。『原論』は、図形の性質と整数の性質を、公準や定義などを出発点として組み立てた著作です。現代のユークリッド空間は、そこで扱われる平面や立体の幾何を座標で表し、高次元へ広げたものです。</p>
+<nav><a href="#geometry">幾何学</a> ／ <a href="#space">空間</a> ／ <a href="#gcd">互除法</a></nav>
+<section id="geometry"><h2>ユークリッド幾何学</h2>
+<p>点・直線・円などについて、出発点となる公準を置き、そこから定理を導きます。たとえば平面上で直線の外に点を一つ取ると、その点を通り、元の直線と交わらない直線は一本だけです。これは、ほかの適切な公理のもとで、ユークリッドの第五公準と同等な形で表した平行線の性質です。</p>
+<p>三角形の頂点を通り対辺に平行な線を引くと、錯角によって三つの内角をその直線上に並べられます。したがって内角の和は180°です。球面上で大円を直線に相当するものとして使うと、北極と赤道上の二点から三つの角がいずれも90°の三角形を作れます。図形の性質は、どの幾何を使うかに依存します。</p></section>
+<section id="space"><h2>ユークリッド空間</h2>
+<p>平面では点を二つの座標、立体では三つの座標で表します。同じように、実数を n 個並べた点を考え、通常の内積から長さと角度を定めた空間が n 次元ユークリッド空間です。点 A と点 B の差 B − A は、A から B への変位ベクトルを表します。</p>
+<p><math display="block"><mi>d</mi><mo>(</mo><mi>A</mi><mo>,</mo><mi>B</mi><mo>)</mo><mo>=</mo><msqrt><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msup><mrow><mo>(</mo><msub><mi>b</mi><mi>i</mi></msub><mo>−</mo><msub><mi>a</mi><mi>i</mi></msub><mo>)</mo></mrow><mn>2</mn></msup></msqrt></math></p>
+<p>A = (1, 2)、B = (4, 6) なら座標差は (3, 4) で、距離は √(9 + 16) = 5 です。三平方の定理を、すべての座標方向に広げた計算です。</p>
+<p>座標の単位や尺度を変えると、計算した距離も変わり得ます。たとえば橋長を m、たわみを mm で並べて比較するときは、比較したい意味に合わせて各項目の尺度を決めます。</p>
+<p><a href="ai-vectors.html">AIのベクトルで距離と角度をどう使うか</a></p></section>
+<section id="gcd"><h2>ユークリッドの互除法</h2>
+<p>二つの正の整数 a、b の最大公約数を求めます。a を b で割った商を q、余りを r とすると、a = bq + r です。a と b の両方を割り切る整数は r = a − bq も割り切ります。逆に b と r の両方を割り切る整数は a も割り切ります。つまり、組 (a, b) を (b, r) に置き換えても公約数は同じです。</p>
+<ol><li>252 = 105 × 2 + 42</li><li>105 = 42 × 2 + 21</li><li>42 = 21 × 2 + 0</li></ol>
+<p>余りは割る数より小さい非負整数なので、繰り返すといずれ0になります。余りが0になったときの割る数が最大公約数です。この例では21です。たとえば、252と105を同じ整数で割って比を簡単にすると12対5になります。</p>
+<details><summary>練習　84と30の最大公約数</summary><p>84 = 30 × 2 + 24、30 = 24 × 1 + 6、24 = 6 × 4 + 0。答えは6です。</p></details>
+</section>
+</main></body></html>
